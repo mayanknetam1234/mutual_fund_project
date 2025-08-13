@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.swing.text.html.Option;
+import java.util.Optional;
+
 @RestController
 public class AuthController {
     private final UserService userService;
@@ -43,15 +46,20 @@ public class AuthController {
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequestDto registerRequestDto){
         User user=registerRequestDtoMapper.convertToEntity(registerRequestDto);
 
-        if(userService.isExistsByUsername(user.getUsername())){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        Optional<User> optionalUser=userService.getUserByEmail(user.getEmail());
+
+        if(optionalUser.isPresent() && optionalUser.get().getEnabled()){
+            return new ResponseEntity<>("Account Already Exist",HttpStatus.NOT_FOUND);
         }
-        User savedUser=userService.saveUser(user);
-       try {
-           otpService.sendOtp(savedUser.getEmail(),savedUser.getVerificationCode());
-       } catch (RuntimeException e) {
-          return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-       }
+        else {
+            User savedUser=userService.saveUser(user);
+            try {
+                otpService.sendOtp(savedUser.getEmail(),savedUser.getVerificationCode());
+            } catch (RuntimeException e) {
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
+        }
 
         return  new ResponseEntity<>( HttpStatus.CREATED);
     }

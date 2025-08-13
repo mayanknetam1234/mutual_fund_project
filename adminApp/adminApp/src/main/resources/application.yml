@@ -1,0 +1,27 @@
+
+server:
+  port: 8082
+
+spring:
+  debug: true
+  config:
+    import: classpath:env.properties
+
+  sql:
+    init:
+      mode: always
+
+  datasource:
+    url: ${DATASOURCE_URL}
+    username: ${DATASOURCE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
