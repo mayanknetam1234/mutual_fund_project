@@ -26,7 +26,13 @@ public class JwtFilter extends OncePerRequestFilter {
     private final ErrorResponseService errorResponseService;
 
     private static final List<String> EXCLUDED_PATHS = List.of(
-            "/v1/auth/login", "/v1/auth/register" ,"/v1/auth/verifyOtp" // add paths you want to exclude
+            //TODO : remove admin paths from jwt filter
+            //TODO : remove extra paths other than auth
+            "/v1/auth/login", "/v1/auth/register" ,"/v1/auth/verifyOtp",
+            "/api/v1/admin/mutualFunds/update" ,
+            "/api/v1/admin/mutualFunds/makeSuccessfulIsinList",
+            "/api/v1/mutual-funds/user/explore",
+            "/api/v1/mutual-funds/user/INF846K01CO3" // add paths you want to exclude
     );
 
     public JwtFilter(JwtService jwtService, UserDetailsService userDetailsService, ErrorResponseService errorResponseService) {

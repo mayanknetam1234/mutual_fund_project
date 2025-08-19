@@ -28,5 +28,6 @@ public class User {
     private String verificationCode;
     private LocalDateTime verificationExpiresAt;
     private Boolean enabled;
+//    private Double wallet;
 
 }
