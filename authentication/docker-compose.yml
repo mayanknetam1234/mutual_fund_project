@@ -11,4 +11,8 @@ services:
       POSTGRES_DB: mutual
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+volumes:
+  postgres_data:
 
