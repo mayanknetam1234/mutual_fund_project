@@ -4,6 +4,7 @@ import com.mayank.mutualFund.authentication.entity.User;
 import com.mayank.mutualFund.authentication.repository.UserRepository;
 import com.mayank.mutualFund.authentication.service.OtpService;
 import com.mayank.mutualFund.authentication.service.UserService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -58,5 +59,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> getUserByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public String getEmailOfUser() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 }

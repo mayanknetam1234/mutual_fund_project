@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -28,6 +29,7 @@ public class User {
     private String verificationCode;
     private LocalDateTime verificationExpiresAt;
     private Boolean enabled;
-//    private Double wallet;
-
+    private Double wallet;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY) //  lazy load
+    private List<WalletTransaction> walletTransactions;
 }

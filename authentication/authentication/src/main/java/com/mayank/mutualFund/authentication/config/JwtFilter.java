@@ -32,7 +32,8 @@ public class JwtFilter extends OncePerRequestFilter {
             "/api/v1/admin/mutualFunds/update" ,
             "/api/v1/admin/mutualFunds/makeSuccessfulIsinList",
             "/api/v1/mutual-funds/user/explore",
-            "/api/v1/mutual-funds/user/INF846K01CO3" // add paths you want to exclude
+            "/api/v1/mutual-funds/user/INF846K01CO3"
+           // add paths you want to exclude
     );
 
     public JwtFilter(JwtService jwtService, UserDetailsService userDetailsService, ErrorResponseService errorResponseService) {
