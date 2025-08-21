@@ -19,6 +19,7 @@ public class WalletTransaction {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transaction_id_seq")
     private Long transactionId;
+    private Double amount;
     @Enumerated(EnumType.STRING) // Stores as 'SELF_TRANSFER' or 'WITHDRAW'
     @Column(nullable = false)
     private PaymentType paymentType;
@@ -29,3 +30,5 @@ public class WalletTransaction {
     @JoinColumn(name = "user_id", nullable = false)  // foreign key
     private User user;
 }
+//TODO: Add time stamp in transactions
+//TODO : Add transaction status

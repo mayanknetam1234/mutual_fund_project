@@ -1,9 +1,14 @@
 package com.mayank.mutualFund.authentication.service.impl;
 
+import com.mayank.mutualFund.authentication.dto.WalletTransactionDto;
 import com.mayank.mutualFund.authentication.entity.User;
+import com.mayank.mutualFund.authentication.entity.WalletTransaction;
+import com.mayank.mutualFund.authentication.enumClasses.PaymentType;
 import com.mayank.mutualFund.authentication.repository.UserRepository;
 import com.mayank.mutualFund.authentication.service.OtpService;
 import com.mayank.mutualFund.authentication.service.UserService;
+import com.mayank.mutualFund.authentication.service.WalletTransactionService;
+import jakarta.transaction.Transactional;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,6 +29,7 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.otpService = otpService;
+
     }
 
 
@@ -65,4 +71,28 @@ public class UserServiceImpl implements UserService {
     public String getEmailOfUser() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
+
+    @Override
+    public User updateWallet(WalletTransaction walletTransaction) {
+        User user=walletTransaction.getUser();
+        if(walletTransaction.getPaymentType()==PaymentType.SELF_TRANSFER){
+            user.setWallet(user.getWallet()+walletTransaction.getAmount());
+
+        } else if (walletTransaction.getPaymentType()==PaymentType.WITHDRAW) {
+            user.setWallet(user.getWallet() - walletTransaction.getAmount());
+
+        }
+        return userRepository.save(user);
+    }
+
+    @Override
+    public Double getAccountBalance(String email) {
+        Optional<User> userOptional=userRepository.findByEmail(email);
+        if(userOptional.isEmpty()){
+            throw  new RuntimeException("User not Present");
+        }
+        return userOptional.get().getWallet();
+    }
+
+
 }

@@ -33,3 +33,4 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY) //  lazy load
     private List<WalletTransaction> walletTransactions;
 }
+//TODO:add bank details such as acc. no, card detail

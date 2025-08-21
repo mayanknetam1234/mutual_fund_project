@@ -16,5 +16,6 @@ public class WalletTransactionDto {
     private PaymentType paymentType;
     private PaymentMethod paymentMethod;
     private String relatedAccount;
+    private Double amount;
     private String email;
 }
