@@ -1,6 +1,8 @@
 package com.mayank.mutualFund.authentication.config;
 
+import com.mayank.mutualFund.authentication.dto.HoldingDto;
 import com.mayank.mutualFund.authentication.dto.WalletTransactionDto;
+import com.mayank.mutualFund.authentication.entity.Holding;
 import com.mayank.mutualFund.authentication.entity.User;
 import com.mayank.mutualFund.authentication.entity.WalletTransaction;
 import com.mayank.mutualFund.authentication.service.UserService;
@@ -19,6 +21,10 @@ public class MapperConfig {
 
         modelMapper.typeMap(WalletTransaction.class, WalletTransactionDto.class)
                 .addMapping(src -> src.getUser().getEmail(), WalletTransactionDto::setEmail);
+
+        modelMapper.typeMap(Holding.class, HoldingDto.class)
+                .addMapping(src -> src.getUser().getEmail(), HoldingDto::setEmail);
+
 
 
         modelMapper.typeMap(WalletTransactionDto.class, WalletTransaction.class)

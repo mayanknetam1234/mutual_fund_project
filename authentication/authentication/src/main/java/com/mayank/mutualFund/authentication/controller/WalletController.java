@@ -33,8 +33,11 @@ public class WalletController {
     public ResponseEntity<WalletTransactionDto> addMoneyToWallet(@RequestBody WalletTransactionDto walletTransactionDto){
         //TODO : implement payment gateway
         walletTransactionDto.setEmail(userService.getEmailOfUser());
+
         walletTransactionDto.setPaymentType(PaymentType.SELF_TRANSFER);
+        System.out.println(1);
         WalletTransaction walletTransaction=transactionService.manageBalanceOfUser(walletTransactionDto);
+
         return new ResponseEntity<>(walletTransactionDtoMapper.convertToDto(walletTransaction), HttpStatus.OK);
     }
 

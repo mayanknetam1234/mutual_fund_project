@@ -31,6 +31,7 @@ public class AdminControllers {
         mutualFundService.saveAll(mutualFundList);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
     @PutMapping("/api/v1/admin/mutualFunds/makeSuccessfulIsinList")
     //TODO :- make it admin access only
     public ResponseEntity<?> makeSuccessfulIsinList() throws Exception {

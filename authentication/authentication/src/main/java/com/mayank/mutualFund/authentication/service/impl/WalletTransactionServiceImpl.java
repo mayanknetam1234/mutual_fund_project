@@ -19,9 +19,12 @@ public class WalletTransactionServiceImpl implements WalletTransactionService {
     @Override
     public WalletTransaction saveTransaction(WalletTransactionDto walletTransactionDto) {
         //convert dto to entity
+        System.out.println("1.1.1");
         WalletTransaction walletTransaction=walletTransactionDtoMapper.convertToEntity(walletTransactionDto);
-
+        System.out.println("1.1.2");
         //save the transaction and return it;
+        System.out.println("1.1.3");
+        System.out.println("finish");
         return walletTransactionRepository.save(walletTransaction);
     }
 }

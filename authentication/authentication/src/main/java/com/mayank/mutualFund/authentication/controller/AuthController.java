@@ -45,20 +45,26 @@ public class AuthController {
     @PostMapping("/v1/auth/register")
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequestDto registerRequestDto){
         User user=registerRequestDtoMapper.convertToEntity(registerRequestDto);
-
+        User savedUser;
         Optional<User> optionalUser=userService.getUserByEmail(user.getEmail());
 
-        if(optionalUser.isPresent() && optionalUser.get().getEnabled()){
-            return new ResponseEntity<>("Account Already Exist",HttpStatus.NOT_FOUND);
-        }
-        else {
-            User savedUser=userService.saveUser(user);
-            try {
-                otpService.sendOtp(savedUser.getEmail(),savedUser.getVerificationCode());
-            } catch (RuntimeException e) {
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        if(optionalUser.isPresent() ){
+            if(optionalUser.get().getEnabled()){
+                return new ResponseEntity<>("Account Already Exist",HttpStatus.NOT_FOUND);
+            }
+            else{
+                //update user and save
+                savedUser=userService.updateUserForRegistrationAndSave(optionalUser.get(),user);
             }
 
+        }
+        else {
+            savedUser=userService.saveUser(user);
+        }
+        try {
+            otpService.sendOtp(savedUser.getEmail(),savedUser.getVerificationCode());
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return  new ResponseEntity<>( HttpStatus.CREATED);

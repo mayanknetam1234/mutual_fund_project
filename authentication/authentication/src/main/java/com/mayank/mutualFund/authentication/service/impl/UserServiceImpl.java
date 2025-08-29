@@ -4,11 +4,10 @@ import com.mayank.mutualFund.authentication.dto.WalletTransactionDto;
 import com.mayank.mutualFund.authentication.entity.User;
 import com.mayank.mutualFund.authentication.entity.WalletTransaction;
 import com.mayank.mutualFund.authentication.enumClasses.PaymentType;
+import com.mayank.mutualFund.authentication.mapper.Mapper;
 import com.mayank.mutualFund.authentication.repository.UserRepository;
 import com.mayank.mutualFund.authentication.service.OtpService;
 import com.mayank.mutualFund.authentication.service.UserService;
-import com.mayank.mutualFund.authentication.service.WalletTransactionService;
-import jakarta.transaction.Transactional;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,6 +28,7 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.otpService = otpService;
+
 
     }
 
@@ -73,15 +73,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<User> getPrincipleUser() {
+        return userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName());
+    }
+
+    @Override
     public User updateWallet(WalletTransaction walletTransaction) {
+
         User user=walletTransaction.getUser();
-        if(walletTransaction.getPaymentType()==PaymentType.SELF_TRANSFER){
-            user.setWallet(user.getWallet()+walletTransaction.getAmount());
+          if(walletTransaction.getPaymentType()==PaymentType.SELF_TRANSFER){
+              Double previousBalance=user.getWallet()==null?0D:user.getWallet();
+              user.setWallet(previousBalance+walletTransaction.getAmount());
 
-        } else if (walletTransaction.getPaymentType()==PaymentType.WITHDRAW) {
-            user.setWallet(user.getWallet() - walletTransaction.getAmount());
+          } else if (walletTransaction.getPaymentType()==PaymentType.WITHDRAW  || walletTransaction.getPaymentType()==PaymentType.INVEST ) {
+              user.setWallet(user.getWallet() - walletTransaction.getAmount());
+          }
 
-        }
         return userRepository.save(user);
     }
 
@@ -92,6 +99,14 @@ public class UserServiceImpl implements UserService {
             throw  new RuntimeException("User not Present");
         }
         return userOptional.get().getWallet();
+    }
+
+    @Override
+    public User updateUserForRegistrationAndSave(User oldUser, User newUser) {
+        oldUser.setPassword(newUser.getPassword());
+        oldUser.setUsername(newUser.getUsername());
+        return saveUser(oldUser);
+
     }
 
 

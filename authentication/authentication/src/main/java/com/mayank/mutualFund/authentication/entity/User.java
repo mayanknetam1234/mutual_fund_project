@@ -30,7 +30,7 @@ public class User {
     private LocalDateTime verificationExpiresAt;
     private Boolean enabled;
     private Double wallet;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY) //  lazy load
-    private List<WalletTransaction> walletTransactions;
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY) //  lazy load
+//    private List<WalletTransaction> walletTransactions;
 }
 //TODO:add bank details such as acc. no, card detail

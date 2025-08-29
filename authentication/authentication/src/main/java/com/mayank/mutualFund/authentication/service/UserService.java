@@ -22,8 +22,12 @@ public interface UserService {
 
     String getEmailOfUser();
 
+    Optional<User> getPrincipleUser();
+
     User updateWallet(WalletTransaction walletTransaction);
 
     Double getAccountBalance(String email);
+
+    User updateUserForRegistrationAndSave(User fetchedUser,User requestUser);
 
 }

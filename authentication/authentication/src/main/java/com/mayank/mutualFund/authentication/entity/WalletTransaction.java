@@ -26,7 +26,7 @@ public class WalletTransaction {
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
     private String relatedAccount;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", nullable = false)  // foreign key
     private User user;
 }
