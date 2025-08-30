@@ -12,7 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.StreamSupport;
 
 @RestController
 public class MutualFundTransactionController {
@@ -20,14 +24,14 @@ public class MutualFundTransactionController {
     private final MutualFundService mutualFundService;
     private final Mapper<Holding, HoldingDto> holdingDtoMapper;
     private final TransactionService transactionService;
+    private final HoldingService holdingService;
 
-
-    public MutualFundTransactionController(UserService userService, MutualFundService mutualFundService, Mapper<Holding, HoldingDto> holdingDtoMapper, TransactionService transactionService) {
+    public MutualFundTransactionController(UserService userService, MutualFundService mutualFundService, Mapper<Holding, HoldingDto> holdingDtoMapper, TransactionService transactionService, HoldingService holdingService) {
         this.userService = userService;
         this.mutualFundService = mutualFundService;
         this.holdingDtoMapper = holdingDtoMapper;
         this.transactionService = transactionService;
-
+        this.holdingService = holdingService;
     }
 
     @PostMapping("/api/v1/mutual-fund/user/invest/{isin}")
@@ -56,6 +60,29 @@ public class MutualFundTransactionController {
 
     }
 
+    @GetMapping("/api/v1/mutual-fund/user/investment")
+    public ResponseEntity<List<HoldingDto>> getAllUserHolding(){
+        Optional<User> userOptional=userService.getPrincipleUser();
 
+        if(userOptional.isEmpty()) return  new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        User principleUser=userOptional.get();
+
+        Iterable<Holding> holdingIterable=holdingService.getAllHoldingOfUser(principleUser);
+
+
+
+        List<HoldingDto> holdingDtoList = StreamSupport.stream(holdingIterable.spliterator(), false)
+                .map(holdingDtoMapper::convertToDto)
+                .toList();
+
+        for(HoldingDto v:holdingDtoList){
+            v.setProfit(v.getUnitsAllocated()*v.getMutualFund().getNav().getNav());
+        }
+
+        return new ResponseEntity<>(holdingDtoList,HttpStatus.OK);
+
+
+    }
 
 }

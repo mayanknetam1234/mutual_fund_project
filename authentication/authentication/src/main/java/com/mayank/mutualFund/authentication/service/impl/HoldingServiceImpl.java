@@ -56,4 +56,14 @@ public class HoldingServiceImpl implements HoldingService {
 //        }
         return holding;
     }
+
+    @Override
+    public Iterable<Holding> getAllHoldingOfUser(User principleUser) {
+        return holdingRepository.findByUser(principleUser);
+    }
+
+    @Override
+    public Optional<Holding> getHoldingByHoldingId(Long holdingId) {
+        return holdingRepository.findById(holdingId);
+    }
 }

@@ -6,15 +6,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class HoldingDto {
-    private Long holdingId;
-    private Double currentInvestment;
-    private Double unitsAllocated;
-    private String email;
-    private Double profit;
-    private MutualFundDto mutualFund;
+public class FundTransactionDetailsResponseDto {
+    private HoldingDto holdingDetails;
+    private List<HoldingTransactionDto> transactionDetailsOfHolding;
 }

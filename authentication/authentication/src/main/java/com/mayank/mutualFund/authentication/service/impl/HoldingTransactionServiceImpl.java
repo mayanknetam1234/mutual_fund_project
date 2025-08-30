@@ -30,4 +30,14 @@ public class HoldingTransactionServiceImpl implements HoldingTransactionService 
     public HoldingTransaction saveHoldingTransaction(HoldingTransaction holdingTransactionToSave) {
         return holdingTransactionRepository.save(holdingTransactionToSave);
     }
+
+    @Override
+    public Iterable<HoldingTransaction> getAllHoldingTransactionByUserAndHolding(User principleUser, Holding principleHolding) {
+        return holdingTransactionRepository.findByUserAndHolding(principleUser,principleHolding);
+    }
+
+    @Override
+    public Iterable<HoldingTransaction> getAllHoldingTransactionByUser(User principleUser) {
+        return holdingTransactionRepository.findByUser(principleUser);
+    }
 }

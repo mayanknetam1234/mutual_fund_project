@@ -1,6 +1,6 @@
 package com.mayank.mutualFund.authentication.dto;
 
-
+import com.mayank.mutualFund.authentication.entity.embedable.Nav;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,11 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class HoldingDto {
-    private Long holdingId;
-    private Double currentInvestment;
+public class AllFundTransactionDetailsResponseDto {
+    private Long transactionId;
+    private Double amount;
     private Double unitsAllocated;
-    private String email;
-    private Double profit;
-    private MutualFundDto mutualFund;
+    private Nav nav;
+    private String mutualFundName;
 }

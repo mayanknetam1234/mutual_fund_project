@@ -1,6 +1,7 @@
 package com.mayank.mutualFund.authentication.service.impl;
 
 import com.mayank.mutualFund.authentication.dto.WalletTransactionDto;
+import com.mayank.mutualFund.authentication.entity.User;
 import com.mayank.mutualFund.authentication.entity.WalletTransaction;
 import com.mayank.mutualFund.authentication.mapper.Mapper;
 import com.mayank.mutualFund.authentication.repository.WalletTransactionRepository;
@@ -26,5 +27,10 @@ public class WalletTransactionServiceImpl implements WalletTransactionService {
         System.out.println("1.1.3");
         System.out.println("finish");
         return walletTransactionRepository.save(walletTransaction);
+    }
+
+    @Override
+    public Iterable<WalletTransaction> getAllWalletTransactionByUser(User principleUser) {
+        return walletTransactionRepository.findByUser(principleUser);
     }
 }

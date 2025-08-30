@@ -17,4 +17,8 @@ public interface HoldingService {
 
 
     Holding changeHoldingInvestment(Holding holding, WalletTransaction walletTransaction, MutualFund mutualFund);
+
+    Iterable<Holding> getAllHoldingOfUser(User principleUser);
+
+    Optional<Holding> getHoldingByHoldingId(Long holdingId);
 }
