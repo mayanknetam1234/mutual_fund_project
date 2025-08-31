@@ -13,18 +13,20 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CsrfFilter;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity,JwtFilter jwtFilter) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity,JwtFilter jwtFilter,CsrfCookieFilter csrfCookieFilter) throws Exception {
         return httpSecurity
-                .csrf(customizer->customizer.disable())
+                .csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.ignoringRequestMatchers(  "/v1/auth/login", "/v1/auth/register" ,"/v1/auth/verifyOtp"))
                 .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> request.anyRequest().permitAll())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(csrfCookieFilter, CsrfFilter.class)
                 .build();
     }
 

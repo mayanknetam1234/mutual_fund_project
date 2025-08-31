@@ -1,6 +1,7 @@
 package com.mayank.mutualFund.authentication.config;
 
 
+import com.mayank.mutualFund.authentication.service.CookieService;
 import com.mayank.mutualFund.authentication.service.ErrorResponseService;
 import com.mayank.mutualFund.authentication.service.JwtService;
 import jakarta.servlet.FilterChain;
@@ -24,7 +25,7 @@ public class JwtFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
     private final ErrorResponseService errorResponseService;
-
+    private final CookieService cookieService;
     private static final List<String> EXCLUDED_PATHS = List.of(
             //TODO : remove admin paths from jwt filter
             //TODO : remove extra paths other than auth
@@ -37,10 +38,11 @@ public class JwtFilter extends OncePerRequestFilter {
            // add paths you want to exclude
     );
 
-    public JwtFilter(JwtService jwtService, UserDetailsService userDetailsService, ErrorResponseService errorResponseService) {
+    public JwtFilter(JwtService jwtService, UserDetailsService userDetailsService, ErrorResponseService errorResponseService, CookieService cookieService) {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
         this.errorResponseService = errorResponseService;
+        this.cookieService = cookieService;
     }
 
 
@@ -51,23 +53,28 @@ public class JwtFilter extends OncePerRequestFilter {
     }
     @Override
     protected void doFilterInternal( HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String authHeader=request.getHeader("Authorization");
+//        String authHeader=request.getHeader("Authorization");
+//
+//        if(authHeader==null || !authHeader.startsWith("Bearer ") ){
+//            errorResponseService.setUnauthorizedResponse(response,"Token not present");
+//            return;
+//        }
+        String jwt=cookieService.extractJwtFromCookies(request);
 
-        if(authHeader==null || !authHeader.startsWith("Bearer ") ){
+        if(jwt==null){
             errorResponseService.setUnauthorizedResponse(response,"Token not present");
             return;
         }
 
         try{
-             String token=authHeader.substring(7);
-             String email=jwtService.extractEmail(token);
+            String email=jwtService.extractEmail(jwt);
 
             System.out.println(email);
             Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
 
             if(email!=null && authentication==null){
                 UserDetails userDetails=userDetailsService.loadUserByUsername(email);
-                if(jwtService.isTokenValid(token,userDetails)){
+                if(jwtService.isTokenValid(jwt,userDetails)){
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     authToken.setDetails(new WebAuthenticationDetailsSource()
                             .buildDetails(request));

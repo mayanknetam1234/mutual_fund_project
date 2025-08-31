@@ -11,6 +11,8 @@ import com.mayank.mutualFund.authentication.service.AuthenticationService;
 import com.mayank.mutualFund.authentication.service.JwtService;
 import com.mayank.mutualFund.authentication.service.OtpService;
 import com.mayank.mutualFund.authentication.service.UserService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -71,7 +73,7 @@ public class AuthController {
     }
 
     @PostMapping("/v1/auth/login")
-    public ResponseEntity<AuthResponseDto> loginUser(@RequestBody LoginRequestDto loginRequestDto){
+    public ResponseEntity<AuthResponseDto> loginUser(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse httpServletResponse){
         User user=loginRequestDtoMapper.convertToEntity(loginRequestDto);
 
 
@@ -86,9 +88,15 @@ public class AuthController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
+        String jwt=jwtService.generateToken(userDetailsService.loadUserByUsername(user.getEmail()));
+        Cookie jwtCookie = new Cookie("jwt", jwt);
+        jwtCookie.setHttpOnly(true);
+        jwtCookie.setSecure(true);
+        jwtCookie.setPath("/");
+        httpServletResponse.addCookie(jwtCookie);
 
         AuthResponseDto authResponseDto=AuthResponseDto.builder()
-                .token(jwtService.generateToken(userDetailsService.loadUserByUsername(user.getEmail())))
+                .token(jwt)
                 .build();
         return  new ResponseEntity<>(authResponseDto, HttpStatus.CREATED);
     }
