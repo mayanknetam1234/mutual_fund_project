@@ -6,6 +6,7 @@ import com.mayank.mutualFund.authentication.dto.LoginRequestDto;
 import com.mayank.mutualFund.authentication.dto.RegisterRequestDto;
 import com.mayank.mutualFund.authentication.dto.VerifyUserRequestDto;
 import com.mayank.mutualFund.authentication.entity.User;
+import com.mayank.mutualFund.authentication.enumClasses.Role;
 import com.mayank.mutualFund.authentication.mapper.Mapper;
 import com.mayank.mutualFund.authentication.service.AuthenticationService;
 import com.mayank.mutualFund.authentication.service.JwtService;
@@ -47,6 +48,8 @@ public class AuthController {
     @PostMapping("/v1/auth/register")
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequestDto registerRequestDto){
         User user=registerRequestDtoMapper.convertToEntity(registerRequestDto);
+        //TODO :- remove default role
+        user.setRole(Role.USER);
         User savedUser;
         Optional<User> optionalUser=userService.getUserByEmail(user.getEmail());
 

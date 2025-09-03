@@ -30,8 +30,8 @@ public class JwtFilter extends OncePerRequestFilter {
             //TODO : remove admin paths from jwt filter
             //TODO : remove extra paths other than auth
             "/v1/auth/login", "/v1/auth/register" ,"/v1/auth/verifyOtp",
-            "/api/v1/admin/mutualFunds/update" ,
-            "/api/v1/admin/mutualFunds/makeSuccessfulIsinList",
+//            "/api/v1/admin/mutualFunds/update" ,
+//            "/api/v1/admin/mutualFunds/makeSuccessfulIsinList",
             "/api/v1/mutual-funds/user/explore",
             "/api/v1/mutual-funds/user/INF846K01CO3"
 

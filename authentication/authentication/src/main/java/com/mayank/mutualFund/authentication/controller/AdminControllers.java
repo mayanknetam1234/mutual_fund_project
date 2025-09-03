@@ -7,6 +7,8 @@ import com.mayank.mutualFund.authentication.service.MutualFundService;
 import com.mayank.mutualFund.authentication.service.impl.CsvReaderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,6 +40,16 @@ public class AdminControllers {
         mutualFundApiService.hitApiAndSaveIsin();
 
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/api/v1/admin/delete")
+    public ResponseEntity<?> deleteAllData(){
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/api/v1/admin/get")
+    public ResponseEntity<?> getData(){
+        return new ResponseEntity<>("get::mappin",HttpStatus.OK);
     }
 
 }

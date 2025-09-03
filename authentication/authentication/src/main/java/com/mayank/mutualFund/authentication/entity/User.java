@@ -1,6 +1,7 @@
 package com.mayank.mutualFund.authentication.entity;
 
 
+import com.mayank.mutualFund.authentication.enumClasses.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,6 +31,10 @@ public class User {
     private LocalDateTime verificationExpiresAt;
     private Boolean enabled;
     private Double wallet;
+    @Enumerated(EnumType.STRING) // Stores as 'SELF_TRANSFER' or 'WITHDRAW'
+    @Column(nullable = false)
+    private Role role;
+
 //    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY) //  lazy load
 //    private List<WalletTransaction> walletTransactions;
 }
